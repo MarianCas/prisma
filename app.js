@@ -26,3 +26,76 @@ function switchView(v) {
         document.getElementById('nav-gestion').classList.add('active');
     }
 }
+// BANCO DE PREGUNTAS ASIGNADO (PARTE B - ALGORITMO Y EVALUACIÓN)
+function iniciarTestAleatorio() {
+    document.getElementById('panel-dashboard').style.display = 'none';
+    document.getElementById('panel-analisis').style.display = 'none';
+    document.getElementById('btn-evaluar').style.display = 'inline-block';
+    
+    // Mezclador aleatorio para garantizar baterías únicas en cada intento
+    let copia = [...bancoPreguntas].sort(() => 0.5 - Math.random());
+    elegidas = copia.slice(0, 10);
+    
+    const target = document.getElementById('questions-target');
+    target.innerHTML = '';
+    
+    elegidas.forEach((q, idx) => {
+        let opts = '';
+        q.o.forEach((opt, oIdx) => {
+            opts += `<label class="option-row"><input type="radio" name="q-${idx}" value="${oIdx}"><span>${opt}</span></label>`;
+        });
+        target.innerHTML += `<div class="question-item"><div class="question-text">${idx + 1}. ${q.t}</div><div class="options-list">${opts}</div></div>`;
+    });
+    document.getElementById('panel-test').style.display = 'block';
+}
+
+function evaluarTest() {
+    let aciertos = 0;
+    const target = document.getElementById('analisis-target');
+    target.innerHTML = '';
+
+    elegidas.forEach((q, idx) => {
+        const checked = document.querySelector(`input[name="q-${idx}"]:checked`);
+        const ans = checked ? parseInt(checked.value) : null;
+        const ok = (ans === q.c);
+        if (ok) aciertos++;
+
+        target.innerHTML += `
+            <div class="result-item ${ok ? 'result-correct' : 'result-incorrect'}">
+                <strong>Desafío ${idx + 1}: ${ok ? '✔ CORRECTO' : '❌ INCORRECTO'}</strong><br>
+                <span style="font-size:14px; color:var(--text-muted);">Tu elección: ${ans !== null ? q.o[ans] : "No contestado"} | Estándar: ${q.o[q.c]}</span>
+                <div class="explanation"><strong>Explicación Científica:</strong> ${q.e}</div>
+            </div>
+        `;
+    });
+
+    // Validación estricta de la regla de los 3 éxitos (mínimo 8/10)
+    if (aciertos >= 8 && exitosContados < 3) {
+        document.getElementById(`dot-${exitosContados}`).classList.add('success');
+        exitosContados++;
+    }
+
+    const porcBase = (exitosContados / 3) * 100;
+    document.getElementById('progreso-txt').innerText = `${Math.round(porcBase)}%`;
+    document.getElementById('progreso-bar').style.width = `${porcBase}%`;
+
+    // Desbloqueo condicional del mapa de ruta
+    if (exitosContados >= 3) {
+        document.getElementById('status-repaso').className = "badge-status status-dominado";
+        document.getElementById('status-repaso').innerText = "Dominado";
+        document.getElementById('card-binarios').classList.remove('locked');
+        document.getElementById('status-binarios').className = "badge-status status-progreso";
+        document.getElementById('status-binarios').innerText = "Abierto";
+    }
+
+    document.getElementById('btn-evaluar').style.display = 'none';
+    document.getElementById('panel-analisis').style.display = 'block';
+    document.getElementById('panel-analisis').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetYVolver() {
+    document.getElementById('form-test').reset();
+    document.getElementById('panel-test').style.display = 'none';
+    document.getElementById('panel-dashboard').style.display = 'block';
+}
+
