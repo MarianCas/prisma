@@ -1,4 +1,6 @@
 // BANCO DE PREGUNTAS ASIGNADO (PARTE A)
+
+
 const bancoPreguntas = [
     { t: "¿Cuál es el símbolo químico correcto del Potasio?", o: ["P", "K", "Pt", "Po"], c: 1, e: "El símbolo es la K, del latín 'Kalium'. La P representa al Fósforo." },
     { t: "¿Número de oxidación del Oxígeno en la mayoría de óxidos?", o: ["+2", "-1", "-2", "0"], c: 2, e: "Actúa con -2 porque pertenece al grupo de los anfígenos y tiende a ganar 2 electrones para estabilizarse." },
@@ -211,7 +213,6 @@ const bancoPreguntas = [
     { t: "El prefijo numérico empleado por la IUPAC para indicar diez átomos de un elemento es:", o: ["Deca-", "Hexa-", "Octa-", "Penta-"], c: 0, e: "El prefijo de raíz griega oficial para denotar diez unidades atómicas es 'deca-'." }
 ];
 
-];
 
 let elegidas = [];
 let exitosContados = 0;
