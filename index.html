@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISMA · Entorno Científico Adaptativo</title>
+    <!-- Vinculamos los estilos independientes para evitar saturar el código -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">PRISMA<span>//</span></div>
+        <nav>
+            <button id="nav-alumno" class="active" onclick="switchView('alumno')">Modo Alumno</button>
+            <button id="nav-gestion" onclick="switchView('gestion')">Área de Gestión / Diseño</button>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- VISTA ALUMNO -->
+        <div id="view-alumno" class="view-section active">
+            <div id="panel-dashboard">
+                <div class="asignaturas-menu">
+                    <span class="asig-tab active">Química</span>
+                    <span class="asig-tab">Física 🔒</span>
+                    <span class="asig-tab">Matemáticas 🔒</span>
+                </div>
+                
+                <div class="welcome-box">
+                    <h2>Módulo: Química Inorgánica</h2>
+                    <p>Repaso estratégico de bases obligatorias. Consigue un mínimo de <strong>8/10 aciertos en 3 ocasiones distintas</strong> para desbloquear la fase práctica.</p>
+                    <div style="font-size: 14px; display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span>Progreso de Nivelación:</span>
+                        <span id="progreso-txt" style="font-weight:bold; color:var(--accent-green);">0%</span>
+                    </div>
+                    <div class="progress-container"><div id="progreso-bar" class="progress-bar"></div></div>
+                    
+                    <div class="racha-container">
+                        <span style="font-size:13px; color:var(--text-muted); font-weight:bold;">Validaciones (Mín. 8/10):</span>
+                        <div id="dot-0" class="racha-dot"></div>
+                        <div id="dot-1" class="racha-dot"></div>
+                        <div id="dot-2" class="racha-dot"></div>
+                    </div>
+                    <button class="btn-action" style="margin-top:20px;" onclick="iniciarTestAleatorio()">Iniciar Repaso Estratégico</button>
+                </div>
+
+                <h3>Mapa de Ruta Química</h3>
+                <div class="grid-competencias">
+                    <div class="card-competencia" id="card-repaso">
+                        <span class="badge-status status-por-activar" id="status-repaso">En Proceso</span>
+                        <h4>1. Repaso Estratégico (ESO)</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Análisis de elementos, cargas patrón y sistemas de nomenclatura IUPAC.</p>
+                    </div>
+                    <div class="card-competencia locked" id="card-binarios">
+                        <span class="badge-status status-bloqueado" id="status-binarios">Bloqueado</span>
+                        <h4>2. Compuestos Binarios</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Óxidos, hidruros y sales binarias. Desafíos basados en el Laboratorio de Errores.</p>
+                    </div>
+                    <div class="card-competencia locked" id="card-ternarios">
+                        <span class="badge-status status-bloqueado" id="status-ternarios">Bloqueado</span>
+                        <h4>3. Compuestos Ternarios</h4>
+                        <p style="font-size:13px; color:var(--text-muted);">Hidróxidos, oxoácidos y oxosales neutras. Nivel completo de Bachillerato.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXAMEN DINÁMICO -->
+            <div id="panel-test" style="display:none;" class="test-box">
+                <h2 style="margin-top:0;">Repaso Estratégico: 10 Desafíos Aleatorios</h2>
+                <p style="color:var(--text-muted); margin-bottom:20px;">Cada intento genera una batería nueva libre de respuestas previas.</p>
+                <form id="form-test"><div id="questions-target"></div></form>
+                <button class="btn-action" id="btn-evaluar" onclick="evaluarTest()">Procesar Respuestas</button>
+                
+                <!-- ANÁLISIS DETALLADO EXPLICATIVO -->
+                <div id="panel-analisis" style="display:none; margin-top:25px; border-top:1px solid var(--border); padding-top:20px;">
+                    <h2 style="margin-top:0; color:var(--accent-blue);">Análisis Detallado y Corrección:</h2>
+                    <div id="analisis-target"></div>
+                    <button class="btn-action" style="background-color:#fff; color:#000; margin-top:15px;" onclick="resetYVolver()">Volver al Mapa de Competencias</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA GESTIÓN -->
+        <div id="view-gestion" class="view-section">
+            <h2>Estructura Maestra: Química Orgánica</h2>
+            <div class="organic-box">
+                <strong>• B1: Arquitectura del Carbono:</strong> Enlaces e hibridaciones (sp³, sp², sp).<br>
+                <strong>• B2: Hidrocarburos:</strong> Lineales, cíclicos y ramificaciones.<br>
+                <strong>• B3: Funciones Oxigenadas:</strong> Alcoholes, aldehídos, cetonas y ácidos.<br>
+                <strong>• B4: Funciones Nitrogenadas:</strong> Aminas, amidas y nitrilos.
+            </div>
+            <h3>Bitácora de Diseño Técnico de la Plataforma</h3>
+            <textarea class="textarea-feedback" placeholder="// Introduce tus pautas de arquitectura web aquí..."></textarea>
+        </div>
+    </div>
+
+    <!-- Vinculamos la lógica de programación independiente -->
+    <script src="app.js"></script>
+</body>
+</html>
