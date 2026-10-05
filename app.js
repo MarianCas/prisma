@@ -1,6 +1,5 @@
 // BANCO DE PREGUNTAS ASIGNADO (PARTE A)
-
-
+// BLOQUE A: CONFIGURACIÓN INICIAL DEL BANCO DE DATOS
 const bancoPreguntas = [
     { t: "¿Cuál es el símbolo químico correcto del Potasio?", o: ["P", "K", "Pt", "Po"], c: 1, e: "El símbolo es la K, del latín 'Kalium'. La P representa al Fósforo." },
     { t: "¿Número de oxidación del Oxígeno en la mayoría de óxidos?", o: ["+2", "-1", "-2", "0"], c: 2, e: "Actúa con -2 porque pertenece al grupo de los anfígenos y tiende a ganar 2 electrones para estabilizarse." },
@@ -212,8 +211,6 @@ const bancoPreguntas = [
     { t: "En la fórmula molecular del peróxido de bario (BaO₂), ¿por qué no se simplifica a BaO?", o: ["Porque el bario tiene carga +1", "Porque se destruiría el grupo peroxo O2(2-)", "Porque el oxígeno actúa con +2", "Porque es un hidruro"], c: 1, e: "El grupo peroxo (O₂)²⁻ es una unidad estructural iónica indisoluble; si se simplifica a BaO pasaría a ser un óxido común." },
     { t: "El prefijo numérico empleado por la IUPAC para indicar diez átomos de un elemento es:", o: ["Deca-", "Hexa-", "Octa-", "Penta-"], c: 0, e: "El prefijo de raíz griega oficial para denotar diez unidades atómicas es 'deca-'." }
 ];
-
-
 let elegidas = [];
 let exitosContados = 0;
 
@@ -228,13 +225,15 @@ function switchView(v) {
         document.getElementById('nav-gestion').classList.add('active');
     }
 }
-// BANCO DE PREGUNTAS ASIGNADO (PARTE B - ALGORITMO Y EVALUACIÓN)
+
+
+// BLOQUE B: ALGORITMOS DE SELECCIÓN ALEATORIA Y EVALUACIÓN CIENTÍFICA
 function iniciarTestAleatorio() {
     document.getElementById('panel-dashboard').style.display = 'none';
     document.getElementById('panel-analisis').style.display = 'none';
     document.getElementById('btn-evaluar').style.display = 'inline-block';
     
-    // Mezclador aleatorio para garantizar baterías únicas en cada intento
+    // Mezclador Fisher-Yates para barajar el pozo de las 200 preguntas
     let copia = [...bancoPreguntas].sort(() => 0.5 - Math.random());
     elegidas = copia.slice(0, 10);
     
@@ -265,7 +264,7 @@ function evaluarTest() {
         target.innerHTML += `
             <div class="result-item ${ok ? 'result-correct' : 'result-incorrect'}">
                 <strong>Desafío ${idx + 1}: ${ok ? '✔ CORRECTO' : '❌ INCORRECTO'}</strong><br>
-                <span style="font-size:14px; color:var(--text-muted);">Tu elección: ${ans !== null ? q.o[ans] : "No contestado"} | Estándar: ${q.o[q.c]}</span>
+                <span style="font-size:14px; color:var(--text-muted);">Tu elección: ${ans !== null ? q.o[ans] : "No contestado"} | Estandard IUPAC: ${q.o[q.c]}</span>
                 <div class="explanation"><strong>Explicación Científica:</strong> ${q.e}</div>
             </div>
         `;
@@ -281,13 +280,18 @@ function evaluarTest() {
     document.getElementById('progreso-txt').innerText = `${Math.round(porcBase)}%`;
     document.getElementById('progreso-bar').style.width = `${porcBase}%`;
 
-    // Desbloqueo condicional del mapa de ruta
+    // Desbloqueo automático y llamada al Laboratorio de Errores
     if (exitosContados >= 3) {
         document.getElementById('status-repaso').className = "badge-status status-dominado";
         document.getElementById('status-repaso').innerText = "Dominado";
         document.getElementById('card-binarios').classList.remove('locked');
         document.getElementById('status-binarios').className = "badge-status status-progreso";
         document.getElementById('status-binarios').innerText = "Abierto";
+        
+        // Ejecuta la carga de los frascos binarios automáticamente
+        if(typeof activarLaboratorioBinarios === 'function') {
+            activarLaboratorioBinarios();
+        }
     }
 
     document.getElementById('btn-evaluar').style.display = 'none';
