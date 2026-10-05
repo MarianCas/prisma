@@ -10,7 +10,7 @@ const bancoPreguntas = [
     { t: "¿Qué sufijo caracteriza al elemento más electronegativo en una sal binaria (ej: NaCl)?", o: ["-ato", "-ito", "-uro", "-ico"], c: 2, e: "La IUPAC establece la terminación '-uro' para el elemento no metálico situado a la derecha." },
     { t: "¿Cuál elemento forma parte de la familia de los Halógenos (Grupo 17)?", o: ["Cloro (Cl)", "Hierro (Fe)", "Calcio (Ca)", "Azufre (S)"], c: 0, e: "El Cloro (Cl) es un halógeno puro. El Azufre es anfígeno y el Calcio alcalinotérreo." },
     { t: "Prefijo de nomenclatura empleado para denotar 4 átomos de una especie:", o: ["Cuadri-", "Tetra-", "Hexa-", "Penta-"], c: 1, e: "El estándar internacional de la IUPAC utiliza el prefijo griego 'tetra-' para el número cuatro." },
-    { t: "La nomenclatura del compuesto gaseoso HCl disuelto en agua es:", o: ["Ácido clórico", "Ácido clorhídrico", "Cloruro de hidrógeno", "Hidruro de cloro"], c: 1, e: "Al encontrarse en estado acuoso, los hidrácidos adoptan la estructura 'Ácido ...hídrico'." }
+    { t: "La nomenclatura del compuesto gaseoso HCl disuelto en agua es:", o: ["Ácido clórico", "Ácido clorhídrico", "Cloruro de hidrógeno", "Hidruro de cloro"], c: 1, e: "Al encontrarse en estado acuoso, los hidrácidos adoptan la estructura 'Ácido ...hídrico'." },
     { t: "¿Cuál es el símbolo químico del Hierro?", o: ["H", "Hi", "Fe", "Ir"], c: 2, e: "Es Fe, originado a partir de su raíz etimológica latina 'Ferrum'." },
     { t: "¿Qué estado de oxidación presentan los metales alcalinos del Grupo 1?", o: ["+1", "+2", "-1", "+3"], c: 0, e: "Al poseer un único electrón periférico, lo ceden adquiriendo una carga neta de +1." },
     { t: "En Stock, las valencias variables de un metal se representan mediante:", o: ["Prefijos", "Números romanos entre paréntesis", "Sufijos oso/ico", "No se indican"], c: 1, e: "Stock normalizó el uso de números romanos encerrados entre paréntesis tras el metal." },
@@ -303,5 +303,33 @@ function resetYVolver() {
     document.getElementById('form-test').reset();
     document.getElementById('panel-test').style.display = 'none';
     document.getElementById('panel-dashboard').style.display = 'block';
+}
+// BLOQUE C: CONFIGURACIÓN Y CARGA DEL LABORATORIO DE ERRORES (BLOQUE 2)
+function activarLaboratorioBinarios() {
+    const labTarget = document.getElementById('laboratorio-target-preguntas');
+    if (!labTarget) return;
+
+    // Compuestos patrón de la ESO con fallos estructurales para auditar
+    const casosErrores = [
+        { f: "FeO3", n: "Óxido de hierro(III)", e: "El hierro actúa con +3 y el oxígeno con -2. La fórmula correcta es Fe₂O₃. El estudiante en prácticas olvidó realizar el cruce de cargas de forma cruzada.", c: "Fe2O3" },
+        { f: "AlH", n: "Hidruro de aluminio", e: "El aluminio pertenece al grupo 13, presentando un único estado de oxidación estable de +3. El hidrógeno actúa con -1. La estructura corregida requiere tres hidrógenos: AlH₃.", c: "AlH3" }
+    ];
+
+    labTarget.innerHTML = "";
+    
+    casosErrores.forEach((caso, i) => {
+        labTarget.innerHTML += `
+            <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 6px; border-left: 4px solid var(--accent-yellow);">
+                <strong style="color:#fff; font-size:15px;">Muestra de Auditoría #${i+1}:</strong><br>
+                <span style="font-size: 14px; color: var(--text-muted); display:block; margin: 5px 0;">Sustancia asignada: <strong>${caso.n}</strong> | Inscripción del frasco: <code style="color:var(--accent-critical); font-size:16px; font-weight:bold;">${caso.f}</code></span>
+                <div style="margin-top: 12px;">
+                    <label style="font-size: 13.5px; display:block; margin-bottom:6px; color:#fff;">Fórmula molecular enmendada:</label>
+                    <input type="text" id="correc-lab-${i}" style="background:#0a0e17; border:1px solid var(--border); color:#fff; padding:8px; border-radius:4px; font-size:14px; width:100%; max-width:250px;" placeholder="Ej: Fe2O3">
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('panel-laboratorio-binarios').style.display = 'block';
 }
 
