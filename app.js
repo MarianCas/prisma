@@ -260,6 +260,7 @@ function evaluarTest() {
         const ans = checked ? parseInt(checked.value) : null;
         const ok = (ans === q.c);
         if (ok) aciertos++;
+        if (!ok) registrarErrorEnBolsa(q);
 
         target.innerHTML += `
             <div class="result-item ${ok ? 'result-correct' : 'result-incorrect'}">
@@ -333,3 +334,60 @@ function activarLaboratorioBinarios() {
     document.getElementById('panel-laboratorio-binarios').style.display = 'block';
 }
 
+// HISTORIAL DE ERRORES REALIZADOS POR EL ALUMNO
+let bolsaErrores = [];
+
+// Captura las preguntas falladas durante la evaluación general
+function registrarErrorEnBolsa(preguntaObjeto) {
+    if (!bolsaErrores.some(item => item.t === preguntaObjeto.t)) {
+        bolsaErrores.push(preguntaObjeto);
+    }
+}
+
+function mostrarPantallaReparar() {
+    document.getElementById('panel-dashboard').style.display = 'none';
+    const target = document.getElementById('reparar-target-preguntas');
+    target.innerHTML = '';
+
+    if (bolsaErrores.length === 0) {
+        target.innerHTML = `
+            <div style="padding: 20px; background: rgba(0, 230, 118, 0.05); border: 1px solid var(--accent-green); border-radius: 6px; text-align: center;">
+                <h3 style="color: var(--accent-green); margin: 0;">¡Felicidades! Tu bitácora de errores está limpia.</h3>
+                <p style="color: var(--text-muted); margin: 10px 0 0 0; font-size: 14px;">No tienes fallos pendientes de reparar en este bloque.</p>
+            </div>
+        `;
+        document.getElementById('panel-reparar').style.display = 'block';
+        return;
+    }
+
+    bolsaErrores.forEach((q, idx) => {
+        let opts = '';
+        q.o.forEach((opt, oIdx) => {
+            opts += `<label class="option-row"><input type="radio" name="reparar-q-${idx}" value="${oIdx}"><span>${opt}</span></label>`;
+        });
+        target.innerHTML += `
+            <div class="question-item" style="border-left: 3px solid var(--accent-yellow); padding-left: 15px;">
+                <div class="question-text"><span style="color: var(--accent-yellow);">Pendiente:</span> ${q.t}</div>
+                <div class="options-list">${opts}</div>
+            </div>
+        `;
+    });
+    document.getElementById('panel-reparar').style.display = 'block';
+}
+
+function evaluarReparacion() {
+    let erroresCorregidos = [];
+    
+    bolsaErrores.forEach((q, idx) => {
+        const checked = document.querySelector(`input[name="reparar-q-${idx}"]:checked`);
+        if (checked && parseInt(checked.value) === q.c) {
+            erroresCorregidos.push(q);
+        }
+    });
+
+    // Filtra y elimina de la bolsa las preguntas que el alumno ya ha corregido bien
+    bolsaErrores = bolsaErrores.filter(q => !erroresCorregidos.includes(q));
+    
+    alert(`¡Validación completada! Has reparado con éxito ${erroresCorregidos.length} errores críticos.`);
+    mostrarPantallaReparar();
+}
