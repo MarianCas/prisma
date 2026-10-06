@@ -58,6 +58,7 @@ function iniciarTestAleatorio() {
     document.getElementById('panel-analisis').style.display = 'none';
     document.getElementById('btn-evaluar').style.display = 'inline-block';
     
+    // Mezclador Fisher-Yates para barajar el pozo de preguntas
     let copia = [...bancoPreguntas].sort(() => 0.5 - Math.random());
     elegidas = copia.slice(0, 10);
     
@@ -66,13 +67,20 @@ function iniciarTestAleatorio() {
     
     elegidas.forEach((q, idx) => {
         let opts = '';
-        q.o.forEach((opt, oIdx) => {
+        
+        // CORRECCIÓN CLAVE: Detecta si los datos usan '.o' o '.options' para evitar la congelación
+        const opcionesPregunta = q.o || q.options;
+        
+        opcionesPregunta.forEach((opt, oIdx) => {
             opts += `<label class="option-row"><input type="radio" name="q-${idx}" value="${oIdx}"><span>${opt}</span></label>`;
         });
+        
         target.innerHTML += `<div class="question-item"><div class="question-text">${idx + 1}. ${q.t}</div><div class="options-list">${opts}</div></div>`;
     });
+    
     document.getElementById('panel-test').style.display = 'block';
 }
+
 
 function registrarErrorEnBolsa(preguntaObjeto) {
     if (!bolsaErrores.some(item => item.t === preguntaObjeto.t)) {
