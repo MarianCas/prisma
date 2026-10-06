@@ -43,8 +43,9 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; flex-wrap: wrap; gap: 15px;">
                         <button class="btn-action" onclick="iniciarTestAleatorio()">Iniciar Repaso Estratégico</button>
-                        <button class="btn-action" id="btn-reparar-errores" style="background-color: var(--accent-yellow); color: #000;" onclick="mostrarPantallaReparar()">Reparar Errores 🛠️</button>
+                        <button class="btn-action" id="btn-reparar-errores" style="background-color: var(--accent-yellow); color: #000;" onclick="mostrarPantallaReparar()">Repasar Errores 📚</button>
                     </div>
+
 
                 </div>
 
@@ -85,17 +86,18 @@
         </div>
 
             <!-- PANTALLA: LABORATORIO DE REPARACIÓN DE ERRORES -->
-        <div id="panel-reparar" style="display:none;" class="test-box">
-                <h2 style="margin-top:0; color:var(--accent-yellow);">Misión: Reparación de Errores Críticos</h2>
+            <div id="panel-reparar" style="display:none;" class="test-box">
+                <h2 style="margin-top:0; color:var(--accent-yellow);">Misión: Repaso de Errores Críticos</h2>
                 <p style="color:var(--text-muted); margin-bottom:25px;">Aquí reaparecen los conceptos en los que has fallado en tus intentos anteriores. Justifica tu conocimiento enmendándolos.</p>
-                
+            
                 <div id="reparar-target-preguntas"></div>
-                
+            
                 <div style="margin-top: 20px; display: flex; gap: 15px;">
                     <button class="btn-action" style="background-color: var(--accent-green); color: #000;" onclick="evaluarReparacion()">Validar Enmiendas</button>
                     <button class="btn-action" style="background-color: #fff; color: #000;" onclick="resetYVolver()">Volver al Mapa</button>
                 </div>
-         </div>
+            </div>
+
 
         
         <!-- VISTA GESTIÓN -->
