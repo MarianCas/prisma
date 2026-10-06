@@ -108,68 +108,104 @@ function evaluarTest() {
 
     const porcBase = (exitosContados / 3) * 100;
     document.getElementById('progreso-txt').innerText = `${Math.round(porcBase)}%`;
-document.getElementById('progreso-bar').style.width = ${porcBase}%;
-if (exitosContados >= 3) {
-document.getElementById('status-repaso').className = "badge-status status-dominado";
-document.getElementById('status-repaso').innerText = "Dominado";
-document.getElementById('card-binarios').classList.remove('locked');
-document.getElementById('status-binarios').className = "badge-status status-progreso";
-document.getElementById('status-binarios').innerText = "Abierto";
-if(typeof activarLaboratorioBinarios === 'function') { activarLaboratorioBinarios(); }
+    document.getElementById('progreso-bar').style.width = `${porcBase}%`;
+
+    // Desbloqueo condicional del mapa de ruta al lograr 3 éxitos
+    if (exitosContados >= 3) {
+        document.getElementById('status-repaso').className = "badge-status status-dominado";
+        document.getElementById('status-repaso').innerText = "Dominado";
+        document.getElementById('card-binarios').classList.remove('locked');
+        document.getElementById('status-binarios').className = "badge-status status-progreso";
+        document.getElementById('status-binarios').innerText = "Abierto";
+        
+        if (typeof activarLaboratorioBinarios === 'function') {
+            activarLaboratorioBinarios();
+        }
+    }
+
+    document.getElementById('btn-evaluar').style.display = 'none';
+    document.getElementById('panel-analisis').style.display = 'block';
+    document.getElementById('panel-analisis').scrollIntoView({ behavior: 'smooth' });
 }
-document.getElementById('btn-evaluar').style.display = 'none';
-document.getElementById('panel-analisis').style.display = 'block';
-document.getElementById('panel-analisis').scrollIntoView({ behavior: 'smooth' });
-}
+
 function resetYVolver() {
-document.getElementById('form-test').reset();
-document.getElementById('panel-test').style.display = 'none';
-document.getElementById('panel-dashboard').style.display = 'block';
+    document.getElementById('form-test').reset();
+    document.getElementById('panel-test').style.display = 'none';
+    document.getElementById('panel-dashboard').style.display = 'block';
 }
+
 // ==========================================
 // 3. SECCIÓN: REPASAR ERRORES (BOLSA DE FALLOS)
 // ==========================================
 function mostrarPantallaReparar() {
-document.getElementById('panel-dashboard').style.display = 'none';
-const target = document.getElementById('reparar-target-preguntas');
-target.innerHTML = '';
-if (bolsaErrores.length === 0) {
-target.innerHTML = <div style="padding: 20px; background: rgba(0, 230, 118, 0.05); border: 1px solid var(--accent-green); border-radius: 6px; text-align: center;"> <h3 style="color: var(--accent-green); margin: 0;">¡Felicidades! Tu bitácora de errores está limpia.</h3> <p style="color: var(--text-muted); margin: 10px 0 0 0; font-size: 14px;">No tienes fallos pendientes de repasar en este bloque.</p> </div>;
-document.getElementById('panel-reparar').style.display = 'block';
-return;
+    document.getElementById('panel-dashboard').style.display = 'none';
+    const target = document.getElementById('reparar-target-preguntas');
+    target.innerHTML = '';
+
+    if (bolsaErrores.length === 0) {
+        target.innerHTML = `
+            <div style="padding: 20px; background: rgba(0, 230, 118, 0.05); border: 1px solid var(--accent-green); border-radius: 6px; text-align: center;">
+                <h3 style="color: var(--accent-green); margin: 0;">¡Felicidades! Tu bitácora de errores está limpia.</h3>
+                <p style="color: var(--text-muted); margin: 10px 0 0 0; font-size: 14px;">No tienes fallos pendientes de repasar en este bloque.</p>
+            </div>
+        `;
+        document.getElementById('panel-reparar').style.display = 'block';
+        return;
+    }
+
+    bolsaErrores.forEach((q, idx) => {
+        let opts = '';
+        q.o.forEach((opt, oIdx) => {
+            opts += `<label class="option-row"><input type="radio" name="reparar-q-${idx}" value="${oIdx}"><span>${opt}</span></label>`;
+        });
+        target.innerHTML += `
+            <div class="question-item" style="border-left: 3px solid var(--accent-yellow); padding-left: 15px;">
+                <div class="question-text"><span style="color: var(--accent-yellow);">Pendiente de Enmienda:</span> ${q.t}</div>
+                <div class="options-list">${opts}</div>
+            </div>
+        `;
+    });
+    document.getElementById('panel-reparar').style.display = 'block';
 }
-bolsaErrores.forEach((q, idx) => {
-let opts = '';
-q.o.forEach((opt, oIdx) => {
-opts += <label class="option-row"><input type="radio" name="reparar-q-${idx}" value="${oIdx}"><span>${opt}</span></label>;
-});
-target.innerHTML += <div class="question-item" style="border-left: 3px solid var(--accent-yellow); padding-left: 15px;"> <div class="question-text"><span style="color: var(--accent-yellow);">Pendiente de Enmienda:</span> ${q.t}</div> <div class="options-list">${opts}</div> </div>;
-});
-document.getElementById('panel-reparar').style.display = 'block';
-}
+
 function evaluarReparacion() {
-let erroresCorregidos = [];
-bolsaErrores.forEach((q, idx) => {
-const checked = document.querySelector(input[name="reparar-q-${idx}"]:checked);
-if (checked && parseInt(checked.value) === q.c) { erroresCorregidos.push(q); }
-});
-bolsaErrores = bolsaErrores.filter(q => !erroresCorregidos.includes(q));
-alert(¡Validación completada! Has repasado con éxito ${erroresCorregidos.length} errores críticos.);
-mostrarPantallaReparar();
+    let erroresCorregidos = [];
+    bolsaErrores.forEach((q, idx) => {
+        const checked = document.querySelector(`input[name="reparar-q-${idx}"]:checked`);
+        if (checked && parseInt(checked.value) === q.c) { 
+            erroresCorregidos.push(q); 
+        }
+    });
+    bolsaErrores = bolsaErrores.filter(q => !erroresCorregidos.includes(q));
+    alert(`¡Validación completada! Has repasado con éxito ${erroresCorregidos.length} errores críticos.`);
+    mostrarPantallaReparar();
 }
+
 // ==========================================
-// 4. BLOQUE DE CARGA: COMPUESTOS BINARIOS
+// 4. BLOQUE DE CARGA: COMPUESTOS BINARIOS (LABORATORIO DE ERRORES)
 // ==========================================
 function activarLaboratorioBinarios() {
-const labTarget = document.getElementById('laboratorio-target-preguntas');
-if (!labTarget) return;
-const casosErrores = [
-{ f: "FeO3", n: "Óxido de hierro(III)", e: "El hierro actúa con +3 y el oxígeno con -2. La fórmula correcta es Fe₂O₃.", c: "Fe2O3" },
-{ f: "AlH", n: "Hidruro de aluminio", e: "El aluminio tiene un único estado estable de +3. La estructura corregida requiere tres hidrógenos: AlH₃.", c: "AlH3" }
-];
-labTarget.innerHTML = "";
-casosErrores.forEach((caso, i) => {
-labTarget.innerHTML += <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 6px; border-left: 4px solid var(--accent-yellow);"> <strong style="color:#fff;">Muestra #${i+1}:</strong><br> <span style="font-size: 14px; color: var(--text-muted);">Sustancia: <strong>${caso.n}</strong> | Fórmula errónea: <code style="color:var(--accent-critical); font-size:16px;">${caso.f}</code></span> <div style="margin-top: 12px;"> <input type="text" id="correc-lab-${i}" style="background:#0a0e17; border:1px solid var(--border); color:#fff; padding:8px; border-radius:4px;" placeholder="Ej: Fe2O3"> </div> </div>;
-});
-document.getElementById('panel-laboratorio-binarios').style.display = 'block';
+    const labTarget = document.getElementById('laboratorio-target-preguntas');
+    if (!labTarget) return;
+    
+    const casosErrores = [
+        { f: "FeO3", n: "Óxido de hierro(III)", e: "El hierro actúa con +3 y el oxígeno con -2. La fórmula correcta es Fe₂O₃. El becario ha olvidado realizar el cruce de cargas de forma correcta.", c: "Fe2O3" },
+        { f: "AlH", n: "Hidruro de aluminio", e: "El aluminio tiene un único estado estable de +3 y el hidrógeno actúa con -1. La estructura corregida requiere tres hidrógenos: AlH₃.", c: "AlH3" }
+    ];
+    
+    labTarget.innerHTML = "";
+    casosErrores.forEach((caso, i) => {
+        labTarget.innerHTML += `
+            <div style="margin-bottom: 20px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 6px; border-left: 4px solid var(--accent-yellow);">
+                <strong style="color:#fff;">Muestra de Auditoría #${i+1}:</strong><br>
+                <span style="font-size: 14px; color: var(--text-muted); display:block; margin: 5px 0;">Sustancia: <strong>${caso.n}</strong> | Inscripción del frasco: <code style="color:var(--accent-critical); font-size:16px; font-weight:bold;">${caso.f}</code></span>
+                <div style="margin-top: 12px;">
+                    <label style="font-size: 13.5px; display:block; margin-bottom:6px; color:#fff;">Fórmula molecular enmendada:</label>
+                    <input type="text" id="correc-lab-${i}" style="background:#0a0e17; border:1px solid var(--border); color:#fff; padding:8px; border-radius:4px; font-size:14px; width:100%; max-width:250px;" placeholder="Ej: Fe2O3">
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById('panel-laboratorio-binarios').style.display = 'block';
 }
+
