@@ -275,9 +275,10 @@ function mostrarPantallaReparar() {
         target.innerHTML = `
             <div style="padding: 20px; background: rgba(0, 230, 118, 0.05); border: 1px solid var(--accent-green); border-radius: 6px; text-align: center;">
                 <h3 style="color: var(--accent-green); margin: 0;">¡Felicidades! Tu bitácora de errores está limpia.</h3>
-                <p style="color: var(--text-muted); margin: 10px 0 0 0; font-size: 14px;">No tienes fallos pendientes de reparar en este bloque.</p>
+                <p style="color: var(--text-muted); margin: 10px 0 0 0; font-size: 14px;">No tienes fallos pendientes de repasar en este bloque.</p>
             </div>
         `;
+
         document.getElementById('panel-reparar').style.display = 'block';
         return;
     }
@@ -309,7 +310,7 @@ function evaluarReparacion() {
 
     // Filtra y elimina de la bolsa las preguntas que el alumno ya ha corregido bien
     bolsaErrores = bolsaErrores.filter(q => !erroresCorregidos.includes(q));
-    
-    alert(`¡Validación completada! Has reparado con éxito ${erroresCorregidos.length} errores críticos.`);
+    alert(`¡Validación completada! Has repasado con éxito ${erroresCorregidos.length} errores críticos.`);
+
     mostrarPantallaReparar();
 }
