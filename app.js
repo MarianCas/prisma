@@ -96,15 +96,20 @@ function evaluarTest() {
     elegidas.forEach((q, idx) => {
         const checked = document.querySelector(`input[name="q-${idx}"]:checked`);
         const ans = checked ? parseInt(checked.value) : null;
-        const ok = (ans === q.c);
+        const ok = (ans === q.c || ans === q.correct);
+        
         if (ok) aciertos++;
-        if (!ok) registrarErrorEnBolsa(q); // Guardar error de forma automática
+        if (!ok) registrarErrorEnBolsa(q);
+
+        const opcionesPregunta = q.o || q.options;
+        let textoRespuesta = ans !== null ? opcionesPregunta[ans] : "No contestado";
+        let textoCorrecta = opcionesPregunta[q.c !== undefined ? q.c : q.correct];
 
         target.innerHTML += `
             <div class="result-item ${ok ? 'result-correct' : 'result-incorrect'}">
                 <strong>Desafío ${idx + 1}: ${ok ? '✔ CORRECTO' : '❌ INCORRECTO'}</strong><br>
-                <span style="font-size:14px; color:var(--text-muted);">Tu elección: ${ans !== null ? q.o[ans] : "No contestado"} | Estándar: ${q.o[q.c]}</span>
-                <div class="explanation"><strong>Explicación Científica:</strong> ${q.e}</div>
+                <span style="font-size:14px; color:var(--text-muted);">Tu elección: ${textoRespuesta} | Estándar: ${textoCorrecta}</span>
+                <div class="explanation"><strong>Explicación Científica:</strong> ${q.e || q.exp}</div>
             </div>
         `;
     });
@@ -118,23 +123,20 @@ function evaluarTest() {
     document.getElementById('progreso-txt').innerText = `${Math.round(porcBase)}%`;
     document.getElementById('progreso-bar').style.width = `${porcBase}%`;
 
-    // Desbloqueo condicional del mapa de ruta al lograr 3 éxitos
     if (exitosContados >= 3) {
         document.getElementById('status-repaso').className = "badge-status status-dominado";
         document.getElementById('status-repaso').innerText = "Dominado";
         document.getElementById('card-binarios').classList.remove('locked');
         document.getElementById('status-binarios').className = "badge-status status-progreso";
         document.getElementById('status-binarios').innerText = "Abierto";
-        
-        if (typeof activarLaboratorioBinarios === 'function') {
-            activarLaboratorioBinarios();
-        }
+        if (typeof activarLaboratorioBinarios === 'function') { activarLaboratorioBinarios(); }
     }
 
     document.getElementById('btn-evaluar').style.display = 'none';
     document.getElementById('panel-analisis').style.display = 'block';
     document.getElementById('panel-analisis').scrollIntoView({ behavior: 'smooth' });
 }
+
 
 function resetYVolver() {
     document.getElementById('form-test').reset();
